@@ -1,20 +1,27 @@
 import socket
 
-s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((socket.gethostname(), 1234))
-s.listen(5)
+HOST = "127.0.0.1"
+PORT = 1234
 
-while True:
-    clientsocket, address = s.accept()
-    print(f"Connection from {address} has been established!")
-    clientsocket.send(bytes("welcome to the server!", "utf-8"))
-    with clientsocket:
-        num1=clientsocket.recv(1024)
-        num2=clientsocket.recv(1024)
-        num1=int(num1.decode("utf-8").strip())
-        num2=int(num2.decode("utf-8").strip())
-        sum=num1+num2
-        mul=num1*num2
-        sub=num1-num2
-        div=num1/num2
-        clientsocket.sendall(sum)
+
+def sendable_data(data):
+    return str(data).rjust(1024, " ").encode("utf-8")
+
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.bind((HOST, PORT))
+    s.listen()
+    conn, addr = s.accept()
+    with conn:
+        print("Connected by", addr)
+        data = conn.recv(1024)
+        data2 = conn.recv(1024)
+        print(data.decode("utf-8").strip())
+        print(data2.decode("utf-8").strip())
+
+        a = int(data2.decode("utf-8").strip())
+        b = int(data.decode("utf-8").strip())
+        conn.send(sendable_data(a + b))
+        conn.send(sendable_data(a - b))
+        conn.send(sendable_data(a * b))
+        conn.send(sendable_data(a / b))
