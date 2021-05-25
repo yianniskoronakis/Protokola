@@ -15,12 +15,6 @@ if __name__ == "__main__":
         num2 =int(input("Give me a number: "))
         s.sendall(sendable_data(num1))
         s.sendall(sendable_data(num2))
-
-        data = s.recv(1024)
-        print(f'Received:\n{data.decode("utf-8").strip()}')
-        data = s.recv(1024)
-        print(f'Received:\n{data.decode("utf-8").strip()}')
-        data = s.recv(1024)
-        print(f'Received:\n{data.decode("utf-8").strip()}')
-        data = s.recv(1024)
-        print(f'Received:\n{data.decode("utf-8").strip()}')
+        for i in range(0,4):
+            data = s.recv(1024)
+            print(f'Received:\n{data.decode("utf-8").strip()}')
